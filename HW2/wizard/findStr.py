@@ -10,7 +10,6 @@ def solve(str):
         solStr += chr(num + ord('A'))
 
     print(solStr)
-    print (len("bd72A880033D0611e54a8902FE72"))
 
 def main():
     str = "CIGDGEMCOMHCGPMBBIENHGBDGIDJL"
