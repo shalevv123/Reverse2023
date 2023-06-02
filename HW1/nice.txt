@@ -1,0 +1,32 @@
+	.file	"crackme.c"
+	.intel_syntax noprefix
+	.text
+	
+	cdq
+	shr	edx, 24  # edx = 8 bits of sign of eax
+	add	eax, edx # eax +=edx
+	movzx	eax, al # eax = lower byte of eax
+	sub	eax, edx # eax-= edx
+	
+	
+	
+	mov	edx, eax # edx = eax
+	mov	eax, edx # eax = edx
+	
+	
+	
+	
+	sar	eax, 31	 # eax = sign of eax  if positive 0000000000000000000 else 111111111111111111
+	shr	eax, 27	 # eax -> 5 msb # 31 or 0
+	
+	
+	### we know eax 0 or 31
+	
+	add	edx, eax # edx += eax 
+	and	edx, 31  # edx -> first five bits of edx
+	
+	### we want edx = eax
+	
+	
+	sub	edx, eax # edx == eax
+	mov	eax, edx # edx = 0
