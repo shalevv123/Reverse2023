@@ -1,5 +1,5 @@
 ﻿  dllmain.cpp
-E:\technion\reverse\Reverse2023\HW3\part2\hook\Dll1\dllmain.cpp(67,20): warning C4018: '<': signed/unsigned mismatch
-E:\technion\reverse\Reverse2023\HW3\part2\hook\Dll1\dllmain.cpp(74,13): warning C4018: '<': signed/unsigned mismatch
-E:\technion\reverse\Reverse2023\HW3\part2\hook\Dll1\dllmain.cpp(83,13): warning C4018: '<': signed/unsigned mismatch
+E:\technion\reverse\Reverse2023\HW3\part2\hook\Dll1\dllmain.cpp(68,20): warning C4018: '<': signed/unsigned mismatch
+E:\technion\reverse\Reverse2023\HW3\part2\hook\Dll1\dllmain.cpp(75,13): warning C4018: '<': signed/unsigned mismatch
+E:\technion\reverse\Reverse2023\HW3\part2\hook\Dll1\dllmain.cpp(84,13): warning C4018: '<': signed/unsigned mismatch
   Dll1.vcxproj -> E:\technion\reverse\Reverse2023\HW3\part2\hook\DecryptTest\Debug\Dll1.dll

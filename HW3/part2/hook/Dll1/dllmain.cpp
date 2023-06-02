@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <stdio.h>
 #include <string>
+#include <iostream>
 // Add additional includes if needed
 // using namespace std;
 
@@ -99,49 +100,62 @@ std::string processString(std::string str) {
 
 // Hook function. Might use helper functions in C, i.e. void _stdcall helper(int num) {}
 __declspec() void funcHook() {
-	MessageBox(NULL,L"hook called", NULL, MB_OK);
 	// Restore overriden bytes
 	remove_hook();
 	// Assembly part. Should call restore_hook somewhere inside, can call original_func_addr
 	char* message;
+	int ret_val;
+	int flag;
 	__asm {
 		
 		mov edi, DWORD PTR[ebp + 12]
 		mov message, edi
 
+		mov edi, DWORD PTR[ebp + 20]
+		push edi
+		mov flag, edi
+
+		mov edi, DWORD PTR[ebp + 16]
+		push edi
 		mov edi, DWORD PTR[ebp + 12]
 		push edi
 		mov edi, DWORD PTR[ebp + 8]
 		push edi
 		call original_func_address
-		add esp, 8
+		mov ret_val, eax
+		add esp, 16
 	}
-	std::string str = processString(message);
-	std::memcpy(message, str.c_str(),str.length());
+	if (flag == 0) {
+		std::string str = processString(message);
+		std::memset(message, 0, strlen(message));
+		std::memcpy(message, str.c_str(), str.length());
+	}
 
 	restore_hook();
-	return;
+	__asm {
+		mov eax, ret_val 
+		leave
+		ret
+	}
 }
 
 void setHook() {
-	MessageBox(NULL, L"A hook was set", L"Don't worry Alon", MB_OK);
-	HMODULE h = GetModuleHandle(L"client.exe");
+	HMODULE h = GetModuleHandle(L"Ws2_32.dll");
 	// Another option: HMODULE h = GetModuleHandle(L"<name_of_our_program>.exe");
 	LPVOID JumpTo;
-	int imageBase = 0x400000;
-	int funcAddress = 0x4015CB;
-	int original_func_address = funcAddress - imageBase + int(h);
-	printf("the function address is: %x", original_func_address);
+
 	if (h == NULL) {
 		// can't find module
-		MessageBox(NULL, L"client.exe wasn't found", NULL, MB_OK);
 		return;
 	}
+
+	original_func_address = (FUNC_PTR)GetProcAddress(h, "recv");
 	// Another option: original_func_address = (char*)h + <offset> if h == our_program.exe, for example.
 	if (original_func_address == NULL) {
 		// can't find function
 		return;
 	}
+
 	JumpTo = (FUNC_PTR)((char*)&funcHook - ((char*)original_func_address + 5)); // The "+5" part is for the offset to be calculated relatively to the address AFTER jmp
 	memcpy(JmpOpcode + 1, &JumpTo, 0x4); // prepare the jmp opcode
 
@@ -154,7 +168,6 @@ void setHook() {
 	// save address to return to after hook. Can be used directly if hook is written in C.
 	// to_return_address = (LPVOID)((char*)original_func_address); // can be changed to original_func_address+<some offset>
 }
-
 
 BOOL APIENTRY DllMain(HMODULE hModule,
 	DWORD  ul_reason_for_call,

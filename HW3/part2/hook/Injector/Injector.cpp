@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <tlhelp32.h>
 #include <Shlwapi.h>
+#include <string>
+#include <iostream>
 
 // LPSTR DLL_PATH; // If name of dll is passed as argument to exe
 #define DLL_PATH "<NameOfDll>.dll" // Otherwise (built-in in exe)
@@ -27,11 +29,15 @@ int main(int argc, char** argv)
         printf("Usage: %s prog_name dll_name\n", argv[0]);
         return 1;
     }
-    LPSTR lpCmdLine = (LPSTR)argv[1];
-    const char* dll_path = (LPSTR)argv[2];
 
+    std::string command = argv[1];
+    command += " DMSG";
+    const char* line = command.c_str();
+    LPSTR lpCmdLine = (LPSTR)line;
+    const char* dll_path = (LPSTR)argv[2];
+    
     // 3) Create process to run cmdline
-    if (CreateProcessA(lpCmdLine, NULL, NULL, NULL, NULL, CREATE_SUSPENDED, NULL, NULL, &Startup, &pi) == FALSE) {
+    if (CreateProcessA(NULL, lpCmdLine, NULL, NULL, NULL, CREATE_SUSPENDED, NULL, NULL, &Startup, &pi) == FALSE) {
         printf("couldnt open process %s\n", lpCmdLine);
         return 1;
     }
