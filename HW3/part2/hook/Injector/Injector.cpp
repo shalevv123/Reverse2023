@@ -23,19 +23,15 @@ int main(int argc, char** argv)
     ZeroMemory(&pi, sizeof(pi));
 
     // 2) Get command line. Two options:
-
-
-    if (argc < 3) {
-        printf("Usage: %s prog_name dll_name\n", argv[0]);
-        return 1;
-    }
-
+    /*
     std::string command = argv[1];
     command += " DMSG";
     const char* line = command.c_str();
     LPSTR lpCmdLine = (LPSTR)line;
     const char* dll_path = (LPSTR)argv[2];
-    
+    */
+    LPSTR lpCmdLine = (LPSTR)"client.exe DMSG";
+    const char* dll_path = (LPSTR)"Dll1.dll";
     // 3) Create process to run cmdline
     if (CreateProcessA(NULL, lpCmdLine, NULL, NULL, NULL, CREATE_SUSPENDED, NULL, NULL, &Startup, &pi) == FALSE) {
         printf("couldnt open process %s\n", lpCmdLine);
