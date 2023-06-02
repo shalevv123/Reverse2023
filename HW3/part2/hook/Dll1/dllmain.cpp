@@ -99,9 +99,9 @@ std::string processString(std::string str) {
 
 // Hook function. Might use helper functions in C, i.e. void _stdcall helper(int num) {}
 __declspec() void funcHook() {
+	MessageBox(NULL,L"hook called", NULL, MB_OK);
 	// Restore overriden bytes
 	remove_hook();
-	original_func_address = (FUNC_PTR)0x4015CB;
 	// Assembly part. Should call restore_hook somewhere inside, can call original_func_addr
 	char* message;
 	__asm {
@@ -124,16 +124,24 @@ __declspec() void funcHook() {
 }
 
 void setHook() {
+	MessageBox(NULL, L"A hook was set", L"Don't worry Alon", MB_OK);
+	HMODULE h = GetModuleHandle(L"client.exe");
 	// Another option: HMODULE h = GetModuleHandle(L"<name_of_our_program>.exe");
 	LPVOID JumpTo;
-
-	original_func_address = (FUNC_PTR)0x4015CB;
+	int imageBase = 0x400000;
+	int funcAddress = 0x4015CB;
+	int original_func_address = funcAddress - imageBase + int(h);
+	printf("the function address is: %x", original_func_address);
+	if (h == NULL) {
+		// can't find module
+		MessageBox(NULL, L"client.exe wasn't found", NULL, MB_OK);
+		return;
+	}
 	// Another option: original_func_address = (char*)h + <offset> if h == our_program.exe, for example.
 	if (original_func_address == NULL) {
 		// can't find function
 		return;
 	}
-
 	JumpTo = (FUNC_PTR)((char*)&funcHook - ((char*)original_func_address + 5)); // The "+5" part is for the offset to be calculated relatively to the address AFTER jmp
 	memcpy(JmpOpcode + 1, &JumpTo, 0x4); // prepare the jmp opcode
 
