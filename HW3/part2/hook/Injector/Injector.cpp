@@ -31,7 +31,7 @@ int main(int argc, char** argv)
     const char* dll_path = (LPSTR)argv[2];
     */
     LPSTR lpCmdLine = (LPSTR)"client.exe DMSG";
-    const char* dll_path = (LPSTR)"Dll1.dll";
+    const char* dll_path = (LPSTR)"clientHook.dll";
     // 3) Create process to run cmdline
     if (CreateProcessA(NULL, lpCmdLine, NULL, NULL, NULL, CREATE_SUSPENDED, NULL, NULL, &Startup, &pi) == FALSE) {
         printf("couldnt open process %s\n", lpCmdLine);
