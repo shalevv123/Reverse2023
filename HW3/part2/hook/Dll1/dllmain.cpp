@@ -66,8 +66,8 @@ std::string processString(std::string str) {
 	std::string upper;
 	std::string lower;
 	for (int i = 0; i < str.length();) {
-		if (str[i] == '\n') {
-			decrypted += '\n';
+		if (str[i] == '\n' or str[i] == '\r' or str[i] == '/r/n') {
+			decrypted += str[i];
 			i++;
 			continue;
 		}
