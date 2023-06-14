@@ -32,7 +32,7 @@ int main(int argc, char** argv)
     //DLL_PATH = (LPSTR)argv[2];
 
     // OR 2b) Fix a specific command line (can include arguments):
-    LPSTR lpCmdLine = (LPSTR)"codes.exe 0 ROBBER_CAPTURED";
+    LPSTR lpCmdLine = (LPSTR)"codes.exe DLQ4W1AMT2 DLQ4W1AMT2";
     const char* dll_path = (LPSTR)"codes.dll";
     // 3) Create process to run cmdline
     if (CreateProcessA(NULL, lpCmdLine, NULL, NULL, NULL, CREATE_SUSPENDED, NULL, NULL, &Startup, &pi) == FALSE) {
