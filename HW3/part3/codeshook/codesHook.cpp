@@ -45,33 +45,31 @@ __declspec(naked) void funcHook() {
 		push ebp
 		mov ebp, esp
 		push edi
-		sub esp, 64
+		sub esp, 28
 		call remove_hook
 
 		
-		mov edi, DWORD PTR [ebp+8]
-		mov DWORD PTR [ebp-4], edi
-		mov edi, DWORD PTR [ebp+12]
-		mov DWORD PTR [ebp-8], edi
-		mov WORD PTR[ebp - 14], 0x000A // "\n"
-
-		// we want to change return address to SKIP the strcmp==0 branch
-		// and go straight to the TRUE branch.
-		// we also want to change argv[1] from SHEEP_HIDING to ROBBER_CAPTURED
-		// we want these changes only if it's the second call to strcmp
+		// if this is the second call to strcmp, then the return address is 0x00401491.
+		// in that case, if strcmp(argv[1]. "ROBBER_CAPTURED") == 0,
+		// then we want to skip the strcmp check, therefore we need to change the return address.
+		// then, we will receive the code associated with ROBBER_CAPTURED.
 		cmp DWORD PTR [ebp+4], 0x00401491
 		jnz _skip
-		// change argv[1] to be ROBBER_CAPTURED
-		mov edi, DWORD PTR [ebp+12] //argv[1]
-		mov DWORD PTR [edi], 0x42424F52
-		mov DWORD PTR [edi+4], 0x435F5245
-		mov DWORD PTR [edi+8], 0x55545041
-		mov DWORD PTR [edi+12], 0x00444552
-		// change return address
+		lea edi, DWORD PTR [ebp-20]
+		mov DWORD PTR [edi], 0x42424F52		// B B O R
+		mov DWORD PTR [edi+4], 0x435F5245	// C _ R E
+		mov DWORD PTR [edi+8], 0x55545041	// U T P A
+		mov DWORD PTR [edi+12], 0x00444552	//\0 D E R
+		mov DWORD PTR [esp], edi
+		mov edi, DWORD PTR [ebp+12] // argv[1]
+		mov DWORD PTR [esp+4], edi
+		call strcmp
+		test eax, eax
+		jnz _skip
+		// change return address to skip the strcmp check, since strcmp will yield (-1).
 		mov DWORD PTR [ebp+4], 0x004014A1
+		
 		_skip:
-
-
 		// call strcmp with the two strings
 		mov edi, DWORD PTR [ebp+8]
 		mov DWORD PTR [esp+4], edi
@@ -79,19 +77,14 @@ __declspec(naked) void funcHook() {
 		mov DWORD PTR [esp], edi
 		call strcmp
 
-		// print return value 
-		mov DWORD PTR [ebp-22], eax
-		mov DWORD PTR [esp+4], eax
-		mov DWORD PTR[ebp - 18], 0x000A6425 // "%d\n"
-		lea edi, DWORD PTR[ebp - 18]
-		mov DWORD PTR[esp], edi
-		call printf
+		// save return value 
+		mov DWORD PTR [ebp-4], eax
 
 		
 		call restore_hook
-		mov eax, DWORD PTR [ebp - 22]
-		add esp, 64
+		mov eax, DWORD PTR [ebp-4]
 		pop edi
+		add esp, 28	
 		leave
 		ret
 	}
