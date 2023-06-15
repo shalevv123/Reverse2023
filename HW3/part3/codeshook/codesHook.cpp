@@ -47,8 +47,6 @@ __declspec(naked) void funcHook() {
 		push edi
 		sub esp, 28
 		call remove_hook
-
-		
 		// if this is the second call to strcmp, then the return address is 0x00401491.
 		// in that case, if strcmp(argv[1]. "ROBBER_CAPTURED") == 0,
 		// then we want to skip the strcmp check, therefore we need to change the return address.
