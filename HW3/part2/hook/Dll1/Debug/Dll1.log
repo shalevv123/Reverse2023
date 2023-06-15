@@ -1,6 +1,6 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (Dll1.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   dllmain.cpp
 E:\technion\reverse\Reverse2023\HW3\part2\hook\Dll1\dllmain.cpp(68,20): warning C4018: '<': signed/unsigned mismatch
-E:\technion\reverse\Reverse2023\HW3\part2\hook\Dll1\dllmain.cpp(75,13): warning C4018: '<': signed/unsigned mismatch
-E:\technion\reverse\Reverse2023\HW3\part2\hook\Dll1\dllmain.cpp(84,13): warning C4018: '<': signed/unsigned mismatch
+E:\technion\reverse\Reverse2023\HW3\part2\hook\Dll1\dllmain.cpp(76,13): warning C4018: '<': signed/unsigned mismatch
+E:\technion\reverse\Reverse2023\HW3\part2\hook\Dll1\dllmain.cpp(89,13): warning C4018: '<': signed/unsigned mismatch
   Dll1.vcxproj -> E:\technion\reverse\Reverse2023\HW3\part2\hook\DecryptTest\Debug\clientHook.dll

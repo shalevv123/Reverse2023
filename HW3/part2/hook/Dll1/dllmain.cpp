@@ -41,8 +41,8 @@ void _stdcall restore_hook() {
 }
 
 
-int strSeqToNum(std::string str) {
-	if (str.length() == 3) {
+int strSeqToNum(char* str) {
+	if (strlen(str) == 3) {
 		if (str[1] == '+')
 			return int(str[0]) + int(str[2]) - 2 * int('0');
 		if (str[1] == '-')
@@ -61,60 +61,65 @@ int strSeqToNum(std::string str) {
 		return int(str[0]) - int('0');
 }
 
-std::string processString(std::string str) {
-	std::string decrypted;
-	std::string upper;
-	std::string lower;
-	for (int i = 0; i < str.length();) {
-		if (str[i] == '\n' or str[i] == '\r' or str[i] == '/r/n') {
-			decrypted += str[i];
+void processString(char* str) {
+	char upper[4];
+	char lower[4];
+	int j = 0;
+	for (int i = 0; i < strlen(str);) {
+		if (str[i] == '\n' or str[i] == '\r') {
+			str[j] = str[i];
+			j++;
 			i++;
 			continue;
 		}
 
-		if (i + 1 < str.length() and (str[i + 1] == '+' or str[i + 1] == '-')) {
-			upper = str.substr(i, 3);
+		if (i + 1 < strlen(str) and (str[i + 1] == '+' or str[i + 1] == '-')) {
+			upper[0] = str[i];
+			upper[1] = str[i + 1];
+			upper[2] = str[i + 2];
+			upper[3] = '\0';
 			i += 3;
 		}
 		else {
-			upper = str[i];
+			upper[0] = str[i];
+			upper[1] = '\0';
 			i += 1;
 		}
 
-		if (i + 1 < str.length() and (str[i + 1] == '+' or str[i + 1] == '-')) {
-			lower = str.substr(i, 3);
+		if (i + 1 < strlen(str) and (str[i + 1] == '+' or str[i + 1] == '-')) {
+			lower[0] = str[i];
+			lower[1] = str[i + 1];
+			lower[2] = str[i + 2];
+			lower[3] = '\0';
 			i += 3;
 		}
 		else {
-			lower = str[i];
+			lower[0] = str[i];
+			lower[1] = '\0';
 			i += 1;
 		}
-		decrypted += (strSeqToNum(upper) << 4) + strSeqToNum(lower);
-
-
+		str[j] = (strSeqToNum(upper) << 4) + strSeqToNum(lower);
+		j++;
 	}
-	return decrypted;
+	str[j] = '\0';
+	return;
 }
 
 
 
+
 // Hook function. Might use helper functions in C, i.e. void _stdcall helper(int num) {}
-__declspec() void funcHook() {
-	// Restore overriden bytes
-	remove_hook();
-	// Assembly part. Should call restore_hook somewhere inside, can call original_func_addr
-	char* message;
-	int ret_val;
-	int flag;
+__declspec(naked) void funcHook() {
 	__asm {
-		
-		mov edi, DWORD PTR[ebp + 12]
-		mov message, edi
+		push ebp
+		mov ebp, esp
+		sub esp, 4 // ebp - 4 -> ret_val. ebp + 20 -> flag. ebp + 12 -> message.
+		push edi
+		call remove_hook
+		// prologue
 
 		mov edi, DWORD PTR[ebp + 20]
 		push edi
-		mov flag, edi
-
 		mov edi, DWORD PTR[ebp + 16]
 		push edi
 		mov edi, DWORD PTR[ebp + 12]
@@ -122,20 +127,27 @@ __declspec() void funcHook() {
 		mov edi, DWORD PTR[ebp + 8]
 		push edi
 		call original_func_address
-		mov ret_val, eax
-		add esp, 16
-	}
-	if (flag == 0) {
-		std::string str = processString(message);
-		std::memset(message, 0, strlen(message));
-		std::memcpy(message, str.c_str(), str.length());
-	}
+		mov DWORD PTR[ebp - 404], eax
+		// call recv with the original arguments, notice recv is STDCALL so it cleans the stack
 
-	restore_hook();
-	__asm {
-		mov eax, ret_val 
+
+		cmp DWORD PTR[ebp + 20], 0
+		jnz prologue
+
+		mov edi, DWORD PTR[ebp + 12]
+		push edi
+		call processString
+		add esp, 4
+		// decrypt message: processString(message)
+
+	prologue:
+
+		call restore_hook
+		mov eax, DWORD PTR[ebp - 404]
+		pop edi
 		leave
-		ret
+		ret 16
+		//epilogue
 	}
 }
 
