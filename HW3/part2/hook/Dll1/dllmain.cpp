@@ -66,7 +66,7 @@ void processString(char* str) {
 	char lower[4];
 	int j = 0;
 	for (int i = 0; i < strlen(str);) {
-		if (str[i] == '\n' or str[i] == '\r') {
+		if (str[i] == '\n' or str[i] == '\r' or str[i] == '\r\n') {
 			str[j] = str[i];
 			j++;
 			i++;
