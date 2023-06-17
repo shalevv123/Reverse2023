@@ -24,7 +24,7 @@
     <ProjectGuid>{12fc24cd-1ea4-4750-8fcb-bb58e31e6dbb}</ProjectGuid>
     <RootNamespace>toolfix</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>toolfix</ProjectName>
+    <ProjectName>CodesInjector</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -140,7 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="toolfix.cpp" />
+    <ClCompile Include="CodesInjector.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
