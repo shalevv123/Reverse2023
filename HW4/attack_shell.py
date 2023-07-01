@@ -1,5 +1,5 @@
 from subprocess import Popen, PIPE, STDOUT
-
+from time import sleep
 if __name__ == '__main__':
     p = Popen(['hw4_client.exe'], stdin=PIPE)
     introduction = b"archer\n2BBVAFEX2RNFB2NF\nPEEK\n"
@@ -28,5 +28,7 @@ if __name__ == '__main__':
         p.stdin.flush()
         p.stdin.write(user_input.encode()+b"\n")
         p.stdin.flush()
+        sleep(1)
+
 
     p.kill()
