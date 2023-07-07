@@ -9,7 +9,7 @@ push 0
 push 0x62508080	
 push edx		
 push 7			
-lea edx, [ebp+8]
+mov eax, 0x5ffd90
 push edx		
 mov edi, 0x62501892 
 call edi	
